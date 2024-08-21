@@ -2,6 +2,8 @@ package com.sts.first.CustomerManagement.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,35 +17,34 @@ import java.util.List;
 @Entity
 @Table(name = "contacts_details")
 public class ContactDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contact_id")
     private Long contactId;
 
-    @Column(name = "email_id", unique = true)
-    private String emailId;
-
     @Column(name = "contact_name", nullable = false)
     private String contactName;
 
-    @Column(name = "primary_number", nullable = false, unique = true)
+    @Column(name = "dob")
+    private LocalDate dob;
+
+    @Column(name = "primary_number", nullable = false)
     private Long primaryNumber;
 
     @Column(name = "designation")
     private String designation;
 
-    @Column(name = "secondary_number", unique = true)
+    @Column(name = "secondary_number")
     private Long secondaryNumber;
-
-    @Column(name = "other_skills")
-    private String otherSkills;
 
     @Column(name = "company_name")
     private String companyName;
 
-    @Column(name = "resume", unique = true)
+    @Column(name = "resume")
     private String resume;
+
+    @Column(name = "email_id", unique = true)
+    private String emailId;
 
     @Lob
     @Column(name = "image")
@@ -52,37 +53,53 @@ public class ContactDetails {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "is_interview_done")
+    private Boolean isInterviewDone;
+
     @Column(name = "current_salary")
     private Double currentSalary;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "highest_education")
+    private String highestEducation;
 
     @Column(name = "hiring_type")
     private String hiringType;
 
-    private String linkdinId;
-    private String clientCompanyName;
-
-    @Column(name = "date_time_inserted")
-    private LocalDateTime dateTimeInserted;
-
-    @Column(name = "techStack")
+    @Column(name = "tech_stack")
     private String techStack;
 
+    @Column(name = "inserted_on")
+    private LocalDate insertedOn;
 
 
-    @OneToMany(mappedBy = "contactDetails", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ContactSkills> skills;
+    @PrePersist
+    protected void onCreate() {
+        this.insertedOn = LocalDate.now();
+    }
 
-    @OneToMany(mappedBy = "contactDetails", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PreferredLocation> preferredLocations;
+    // Relationships
+    @ManyToOne
+    @JoinColumn(name = "domain_id")
+    private MasterDomain domain;
 
-    @OneToMany(mappedBy = "contactDetails", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<InterviewDetails> interviewsDetails;
+    @ManyToOne
+    @JoinColumn(name = "tech_id")
+    private MasterTechnology technology;
 
-//    @Column(name = "preferred_location_id")
-//    private Long preferredLocationId;
-//
-//    @Column(name = "interview_id")
-//    private Long interviewId;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private MasterLocation preferredLocation;
+
+    @ManyToOne
+    @JoinColumn(name = "interview_id")
+    private ContactInterviews interview;
+
+    @ManyToOne
+    @JoinColumn(name = "current_location_id")
+    private MasterLocation currentLocation;
 
 
 

@@ -16,6 +16,6 @@ public interface ContactDetailsService {
 
     List<ContactDetailsDto> getAllContacts();
 
-//    List<ContactDetailsDto> searchContactsByKeyword(String query);
+    List<ContactDetailsDto> searchContactsByKeyword(String query, String filterType);
 
 }

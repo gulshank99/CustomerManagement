@@ -3,31 +3,24 @@ package com.sts.first.CustomerManagement.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+@Entity
+@Table(name = "contact_preferred_location")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
-
-@Entity
-@Table(name = "contacts_skills")
-public class ContactSkills {
-
+public class ContactPreferredLocation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "contact_id", nullable = false)
+    @JoinColumn(name = "contact_id")
     private ContactDetails contactDetails;
 
     @ManyToOne
-    @JoinColumn(name = "tech_id", nullable = false)
-    private Technology technology;
-
-    private Integer experience;
-    private String expertiseLevel;
-
+    @JoinColumn(name = "location_id")
+    private MasterLocation location;
 }

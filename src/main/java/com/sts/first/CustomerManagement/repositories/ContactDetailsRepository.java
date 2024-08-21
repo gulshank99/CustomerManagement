@@ -9,16 +9,22 @@ import java.util.List;
 
 public interface ContactDetailsRepository extends JpaRepository<ContactDetails,Long> {
 
-//    @Query("SELECT c FROM ContactDetails c " +
-//            "WHERE c.contactName LIKE %:query% " +
-//            "OR c.emailId LIKE %:query% " +
-//            "OR c.companyName LIKE %:query% " +
-//            "OR c.designation LIKE %:query% " +
-//            "OR c.otherSkills LIKE %:query% " +
-//            "OR c.techStack LIKE %:query% " +
-//            "OR c.isActive LIKE %:query% " +
-//            "OR c.clientCompanyName LIKE %:query% " +
-//            "OR c.hiringType LIKE %:query%")
-//    List<ContactDetails> searchByKeyword(@Param("query") String query);
+    // Search by Contact Name
+    List<ContactDetails> findByContactNameContainingIgnoreCase(String contactName);
+    List<ContactDetails> findByPrimaryNumberOrSecondaryNumber(Long primaryNumber, Long secondaryNumber);
+    // Search by Email ID
+    List<ContactDetails> findByEmailIdContainingIgnoreCase(String emailId);
+
+    // Search by Designation
+    List<ContactDetails> findByDesignationContainingIgnoreCase(String designation);
+
+    // Search by Domain
+    List<ContactDetails> findByDomain_DomainDetailsContainingIgnoreCase(String domainDetails);
+
+    // Search by Technology
+    List<ContactDetails> findByTechnology_TechnologyContainingIgnoreCase(String technology);
+
+    // Search by Location
+    List<ContactDetails> findByPreferredLocation_LocationDetailsContainingIgnoreCase(String locationDetails);
 
 }

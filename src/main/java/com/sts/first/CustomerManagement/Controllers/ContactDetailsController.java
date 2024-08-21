@@ -52,9 +52,9 @@ public class ContactDetailsController {
         return ResponseEntity.ok(contacts);
     }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<List<ContactDetailsDto>> searchContacts(@RequestParam String query) {
-//        List<ContactDetailsDto> contacts = contactDetailsService.searchContactsByKeyword(query);
-//        return ResponseEntity.ok(contacts);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<ContactDetailsDto>> searchContacts(@RequestParam String query, @RequestParam String filterType) {
+        List<ContactDetailsDto> contacts = contactDetailsService.searchContactsByKeyword(query, filterType);
+        return ResponseEntity.ok(contacts);
+    }
 }
