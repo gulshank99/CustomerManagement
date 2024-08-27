@@ -1,6 +1,8 @@
 package com.sts.first.CustomerManagement.entities;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,5 +22,10 @@ public class MasterLocation{
     private String locationDetails;
 
     @Column(name = "inserted_on")
-    private LocalDateTime insertedOn;
+    private LocalDate insertedOn;
+
+    @PrePersist
+    protected void onCreate() {
+        this.insertedOn = LocalDate.now();
+    }
 }

@@ -1,6 +1,8 @@
 package com.sts.first.CustomerManagement.entities;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,7 +37,13 @@ public class MasterClient {
     private Long secondaryNumber;
 
     @Column(name = "inserted_on")
-    private LocalDateTime insertedOn;
+    private LocalDate insertedOn;
+
+
+    @PrePersist
+    protected void onCreate() {
+        this.insertedOn = LocalDate.now();
+    }
 
     @ManyToOne
     @JoinColumn(name = "location_id")

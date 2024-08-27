@@ -1,9 +1,11 @@
 package com.sts.first.CustomerManagement.services.Impl;
 
 import com.sts.first.CustomerManagement.dtos.InterviewRoundDto;
+import com.sts.first.CustomerManagement.entities.ContactDetails;
 import com.sts.first.CustomerManagement.entities.ContactInterviews;
 import com.sts.first.CustomerManagement.entities.InterviewRound;
 import com.sts.first.CustomerManagement.exceptions.ResourceNotFoundException;
+import com.sts.first.CustomerManagement.repositories.ContactDetailsRepository;
 import com.sts.first.CustomerManagement.repositories.ContactInterviewRepository;
 import com.sts.first.CustomerManagement.repositories.InterviewRoundRepository;
 import com.sts.first.CustomerManagement.services.InterviewRoundService;
@@ -21,6 +23,9 @@ public class InterviewRoundServiceImpl implements InterviewRoundService {
     private InterviewRoundRepository interviewRoundRepository;
     @Autowired
     private ContactInterviewRepository contactInterviewRepository;
+
+    @Autowired
+    private ContactDetailsRepository contactDetailsRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -52,6 +57,12 @@ public class InterviewRoundServiceImpl implements InterviewRoundService {
             ContactInterviews contactInterviews = contactInterviewRepository.findById(interviewRoundDto.getInterview().getInterviewId())
                     .orElseThrow(() -> new ResourceNotFoundException("Interview not found with id: " + interviewRoundDto.getInterview().getInterviewId()));
             interviewRound.setInterview(contactInterviews);
+        }
+
+        if (interviewRoundDto.getContactDetails() != null) {
+            ContactDetails contactDetails = contactDetailsRepository.findById(interviewRoundDto.getContactDetails().getContactId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + interviewRoundDto.getContactDetails().getContactId()));
+            interviewRound.setContactDetails(contactDetails);
         }
 
         InterviewRound updatedInterviewRound = interviewRoundRepository.save(interviewRound);
