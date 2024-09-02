@@ -2,11 +2,13 @@ package com.sts.first.CustomerManagement.services.Impl;
 
 import com.sts.first.CustomerManagement.dtos.ContactDetailsDto;
 import com.sts.first.CustomerManagement.entities.*;
+import com.sts.first.CustomerManagement.exceptions.BadApiRequestException;
 import com.sts.first.CustomerManagement.exceptions.ResourceNotFoundException;
 import com.sts.first.CustomerManagement.repositories.*;
 import com.sts.first.CustomerManagement.services.ContactDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +35,14 @@ public class ContactDetailsServiceImpl implements ContactDetailsService {
 
     @Override
     public ContactDetailsDto createContact(ContactDetailsDto contactDetailsDto) {
-        ContactDetails contactDetails = modelMapper.map(contactDetailsDto, ContactDetails.class);
-        ContactDetails savedContact = contactDetailsRepository.save(contactDetails);
+        ContactDetails savedContact;
+//        try {
+            ContactDetails contactDetails = modelMapper.map(contactDetailsDto, ContactDetails.class);
+            savedContact = contactDetailsRepository.save(contactDetails);
+//        } catch (DataIntegrityViolationException ex) {
+//            throw new BadApiRequestException("Duplicate entry found" );
+//        }
+
         return modelMapper.map(savedContact, ContactDetailsDto.class);
     }
 
@@ -53,6 +61,7 @@ public class ContactDetailsServiceImpl implements ContactDetailsService {
         contactDetails.setCompanyName(contactDetailsDto.getCompanyName());
         contactDetails.setResume(contactDetailsDto.getResume());
         contactDetails.setEmailId(contactDetailsDto.getEmailId());
+        contactDetails.setTotalExperience(contactDetailsDto.getTotalExperience());
         contactDetails.setImage(contactDetailsDto.getImage());
         contactDetails.setIsActive(contactDetailsDto.getIsActive());
         contactDetails.setIsInterviewDone(contactDetailsDto.getIsInterviewDone());
@@ -60,32 +69,15 @@ public class ContactDetailsServiceImpl implements ContactDetailsService {
         contactDetails.setGender(contactDetailsDto.getGender());
         contactDetails.setHighestEducation(contactDetailsDto.getHighestEducation());
         contactDetails.setHiringType(contactDetailsDto.getHiringType());
-        contactDetails.setTechStack(contactDetailsDto.getTechStack());
+        contactDetails.setTechRole(contactDetailsDto.getTechRole());
+        contactDetails.setNoticePeriod(contactDetailsDto.getNoticePeriod());
 
         // Fetch and set related entities
-        if (contactDetailsDto.getDomain() != null && contactDetailsDto.getDomain().getDomainId() != null) {
-            MasterDomain domain = masterDomainRepository.findById(contactDetailsDto.getDomain().getDomainId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Domain not found with id: " + contactDetailsDto.getDomain().getDomainId()));
-            contactDetails.setDomain(domain);
-        }
-
-        if (contactDetailsDto.getTechnology() != null && contactDetailsDto.getTechnology().getTechId() != null) {
-            MasterTechnology technology = masterTechnologyRepository.findById(contactDetailsDto.getTechnology().getTechId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Technology not found with id: " + contactDetailsDto.getTechnology().getTechId()));
-            contactDetails.setTechnology(technology);
-        }
-
-        if (contactDetailsDto.getPreferredLocation() != null && contactDetailsDto.getPreferredLocation().getLocationId() != null) {
-            MasterLocation location = masterLocationRepository.findById(contactDetailsDto.getPreferredLocation().getLocationId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + contactDetailsDto.getPreferredLocation().getLocationId()));
-            contactDetails.setPreferredLocation(location);
-        }
-
-        if (contactDetailsDto.getInterview() != null && contactDetailsDto.getInterview().getInterviewId() != null) {
-            ContactInterviews interview = contactInterviewRepository.findById(contactDetailsDto.getInterview().getInterviewId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Interview not found with id: " + contactDetailsDto.getInterview().getInterviewId()));
-            contactDetails.setInterview(interview);
-        }
+//        if (contactDetailsDto.getInterview() != null && contactDetailsDto.getInterview().getInterviewId() != null) {
+//            ContactInterviews interview = contactInterviewRepository.findById(contactDetailsDto.getInterview().getInterviewId())
+//                    .orElseThrow(() -> new ResourceNotFoundException("Interview not found with id: " + contactDetailsDto.getInterview().getInterviewId()));
+//            contactDetails.setInterview(interview);
+//        }
 
         if (contactDetailsDto.getCurrentLocation() != null && contactDetailsDto.getCurrentLocation().getLocationId() != null) {
             MasterLocation currentLocation = masterLocationRepository.findById(contactDetailsDto.getCurrentLocation().getLocationId())
@@ -124,37 +116,32 @@ public class ContactDetailsServiceImpl implements ContactDetailsService {
     @Override
     public List<ContactDetailsDto> searchContactsByKeyword(String query, String filterType) {
         List<ContactDetails> contacts;
-        Long longQuery=Long.parseLong(query);
-
-        switch (filterType.toLowerCase()) {
-            case "name":
-                contacts = contactDetailsRepository.findByContactNameContainingIgnoreCase(query);
-                break;
-            case "phone":
-                contacts = contactDetailsRepository.findByPrimaryNumberOrSecondaryNumber(longQuery, longQuery);
-                break;
-            case "email":
-                contacts = contactDetailsRepository.findByEmailIdContainingIgnoreCase(query);
-                break;
-            case "designation":
-                contacts = contactDetailsRepository.findByDesignationContainingIgnoreCase(query);
-                break;
-            case "domain":
-                contacts = contactDetailsRepository.findByDomain_DomainDetailsContainingIgnoreCase(query);
-                break;
-            case "techrole":
-                contacts = contactDetailsRepository.findByTechnology_TechnologyContainingIgnoreCase(query);
-                break;
-            case "location":
-                contacts = contactDetailsRepository.findByPreferredLocation_LocationDetailsContainingIgnoreCase(query);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid filter type: " + filterType);
+        try {
+            switch (filterType.toLowerCase()) {
+                case "name":
+                    contacts = contactDetailsRepository.findByContactNameContainingIgnoreCase(query);
+                    break;
+                case "phone":
+                    Long longQuery = Long.parseLong(query); // Parse query only for phone filter type
+                    contacts = contactDetailsRepository.findByPrimaryNumberOrSecondaryNumber(longQuery, longQuery);
+                    break;
+                case "email":
+                    contacts = contactDetailsRepository.findByEmailIdContainingIgnoreCase(query);
+                    break;
+                case "designation":
+                    contacts = contactDetailsRepository.findByDesignationContainingIgnoreCase(query);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid filter type: " + filterType);
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid phone number format. Please provide a valid number.", e);
         }
 
         return contacts.stream()
                 .map(contact -> modelMapper.map(contact, ContactDetailsDto.class))
                 .collect(Collectors.toList());
     }
+
 }
 

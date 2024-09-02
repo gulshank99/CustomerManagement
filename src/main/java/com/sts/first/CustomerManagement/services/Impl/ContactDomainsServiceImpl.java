@@ -1,5 +1,6 @@
 package com.sts.first.CustomerManagement.services.Impl;
 
+import com.sts.first.CustomerManagement.dtos.ContactDetailsDto;
 import com.sts.first.CustomerManagement.dtos.ContactDomainsDto;
 import com.sts.first.CustomerManagement.entities.ContactDomains;
 import com.sts.first.CustomerManagement.exceptions.ResourceNotFoundException;
@@ -8,6 +9,9 @@ import com.sts.first.CustomerManagement.services.ContactDomainService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ContactDomainsServiceImpl implements ContactDomainService {
@@ -48,5 +52,13 @@ public class ContactDomainsServiceImpl implements ContactDomainService {
                 .orElseThrow(() -> new ResourceNotFoundException("Contact domain not found with id: " + id));
         return modelMapper.map(contactDomain, ContactDomainsDto.class);
     }
+
+    @Override
+    public List<ContactDomainsDto> getAllContactDomains() {
+        return contactDomainsRepository.findAll().stream()
+                .map(domains -> modelMapper.map(domains, ContactDomainsDto.class))
+                .collect(Collectors.toList());
+    }
+
 
 }

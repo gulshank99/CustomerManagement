@@ -42,8 +42,8 @@ public class InterviewRound {
     @JoinColumn(name = "interview_id")
     private ContactInterviews interview;
 
-    @ManyToOne
-    @JoinColumn(name = "contact_id")
-    private ContactDetails contactDetails;
+//    @ManyToOne
+//    @JoinColumn(name = "contact_id")
+//    private ContactDetails contactDetails;
 }
 

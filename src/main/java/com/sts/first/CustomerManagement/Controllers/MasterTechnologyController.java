@@ -1,7 +1,10 @@
 package com.sts.first.CustomerManagement.Controllers;
+import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.MasterTechnologyDto;
 import com.sts.first.CustomerManagement.services.MasterTechnologyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,7 @@ public class MasterTechnologyController {
     private MasterTechnologyService masterTechnologyService;
 
     @PostMapping
-    public ResponseEntity<MasterTechnologyDto> createTechnology(@RequestBody MasterTechnologyDto masterTechnologyDto) {
+    public ResponseEntity<MasterTechnologyDto> createTechnology(@Valid @RequestBody MasterTechnologyDto masterTechnologyDto) {
         return ResponseEntity.ok(masterTechnologyService.createTechnology(masterTechnologyDto));
     }
 
@@ -25,9 +28,13 @@ public class MasterTechnologyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTechnology(@PathVariable Long id) {
-        masterTechnologyService.deleteTechnology(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponseMessage> deleteTechnology(@PathVariable Long id) {
+        masterTechnologyService.deleteTechnology(id); ApiResponseMessage message= ApiResponseMessage.builder()
+                .message("Successfully Deleted")
+                .success(true)
+                .status(HttpStatus.OK)
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

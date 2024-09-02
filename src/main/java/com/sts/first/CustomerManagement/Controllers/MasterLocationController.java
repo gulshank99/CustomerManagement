@@ -1,8 +1,11 @@
 package com.sts.first.CustomerManagement.Controllers;
 
+import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.MasterLocationDto;
 import com.sts.first.CustomerManagement.services.MasterLocationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +19,7 @@ public class MasterLocationController {
     private MasterLocationService masterLocationService;
 
     @PostMapping
-    public ResponseEntity<MasterLocationDto> createLocation(@RequestBody MasterLocationDto masterLocationDto) {
+    public ResponseEntity<MasterLocationDto> createLocation(@Valid @RequestBody MasterLocationDto masterLocationDto) {
         return ResponseEntity.ok(masterLocationService.createLocation(masterLocationDto));
     }
 
@@ -26,9 +29,13 @@ public class MasterLocationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
-        masterLocationService.deleteLocation(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponseMessage> deleteLocation(@PathVariable Long id) {
+        masterLocationService.deleteLocation(id); ApiResponseMessage message= ApiResponseMessage.builder()
+                .message("Successfully Deleted")
+                .success(true)
+                .status(HttpStatus.OK)
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

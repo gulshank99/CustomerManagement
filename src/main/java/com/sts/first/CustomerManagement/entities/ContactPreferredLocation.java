@@ -13,8 +13,8 @@ public class ContactPreferredLocation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "pref_location_id")
+    private Long prefLocationId;
 
     @ManyToOne
     @JoinColumn(name = "contact_id")

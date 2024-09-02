@@ -13,8 +13,8 @@ public class ContactTechnology {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "contact_tech_id")
+    private Long contactTechId;
 
     @Column(name = "experience")
     private Integer experience;
@@ -28,11 +28,13 @@ public class ContactTechnology {
     @Column(name = "is_secondary")
     private Boolean isSecondary;
 
-    @ManyToOne
+
+
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "contact_id")
     private ContactDetails contactDetails;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "tech_id")
     private MasterTechnology technology;
 }

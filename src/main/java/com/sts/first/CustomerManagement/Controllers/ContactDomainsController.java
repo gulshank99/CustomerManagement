@@ -1,9 +1,12 @@
 package com.sts.first.CustomerManagement.Controllers;
 
 
+import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.ContactDomainsDto;
 import com.sts.first.CustomerManagement.services.ContactDomainService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +20,7 @@ public class ContactDomainsController {
     private ContactDomainService contactDomainsService;
 
     @PostMapping
-    public ResponseEntity<ContactDomainsDto> createContactDomain(@RequestBody ContactDomainsDto contactDomainsDto) {
+    public ResponseEntity<ContactDomainsDto> createContactDomain(@Valid @RequestBody ContactDomainsDto contactDomainsDto) {
         return ResponseEntity.ok(contactDomainsService.createContactDomain(contactDomainsDto));
     }
 
@@ -27,9 +30,15 @@ public class ContactDomainsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteContactDomain(@PathVariable Long id) {
+    public ResponseEntity<ApiResponseMessage> deleteContactDomain(@PathVariable Long id) {
         contactDomainsService.deleteContactDomain(id);
-        return ResponseEntity.noContent().build();
+        ApiResponseMessage message= ApiResponseMessage.builder()
+                .message("Successfully Deleted")
+                .success(true)
+                .status(HttpStatus.OK)
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.OK);
+
     }
 
     @GetMapping("/{id}")
@@ -37,8 +46,8 @@ public class ContactDomainsController {
         return ResponseEntity.ok(contactDomainsService.getContactDomainById(id));
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<ContactDomainsDto>> getAllContactDomains() {
-//        return ResponseEntity.ok(contactDomainsService.getAllContactDomains());
-//    }
+    @GetMapping
+    public ResponseEntity<List<ContactDomainsDto>> getAllContactDomains() {
+        return ResponseEntity.ok(contactDomainsService.getAllContactDomains());
+    }
 }

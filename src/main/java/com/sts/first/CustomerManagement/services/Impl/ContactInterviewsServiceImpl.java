@@ -50,11 +50,11 @@ public class ContactInterviewsServiceImpl implements ContactInterviewService {
         contactInterviews.setInterviewStatus(contactInterviewsDto.getInterviewStatus());
 
         // Update the associated ContactDetails if provided
-//        if (contactInterviewsDto.getContactDetails() != null) {
-//            ContactDetails contactDetails = contactDetailsRepository.findById(contactInterviewsDto.getContactDetails().getContactId())
-//                    .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + contactInterviewsDto.getContactDetails().getContactId()));
-//            contactInterviews.setContactDetails(contactDetails);
-//        }
+        if (contactInterviewsDto.getContactDetails() != null) {
+            ContactDetails contactDetails = contactDetailsRepository.findById(contactInterviewsDto.getContactDetails().getContactId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + contactInterviewsDto.getContactDetails().getContactId()));
+            contactInterviews.setContactDetails(contactDetails);
+        }
 
         // Update the associated MasterClient if provided
         if (contactInterviewsDto.getClient() != null) {

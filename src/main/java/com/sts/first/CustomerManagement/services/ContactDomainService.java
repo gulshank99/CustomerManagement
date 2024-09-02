@@ -1,5 +1,6 @@
 package com.sts.first.CustomerManagement.services;
 
+import com.sts.first.CustomerManagement.dtos.ContactDetailsDto;
 import com.sts.first.CustomerManagement.dtos.ContactDomainsDto;
 
 import java.util.List;
@@ -9,5 +10,7 @@ public interface ContactDomainService {
     ContactDomainsDto updateContactDomain(Long id, ContactDomainsDto contactDomainsDto);
     void deleteContactDomain(Long id);
     ContactDomainsDto getContactDomainById(Long id);
+
+    List<ContactDomainsDto> getAllContactDomains();
 
 }

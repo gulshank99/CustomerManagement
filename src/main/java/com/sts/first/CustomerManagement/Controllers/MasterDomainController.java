@@ -1,7 +1,10 @@
 package com.sts.first.CustomerManagement.Controllers;
+import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.MasterDomainDto;
 import com.sts.first.CustomerManagement.services.MasterDomainService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,7 @@ public class MasterDomainController {
     private MasterDomainService masterDomainService;
 
     @PostMapping
-    public ResponseEntity<MasterDomainDto> createDomain(@RequestBody MasterDomainDto masterDomainDto) {
+    public ResponseEntity<MasterDomainDto> createDomain(@Valid @RequestBody MasterDomainDto masterDomainDto) {
         return ResponseEntity.ok(masterDomainService.createDomain(masterDomainDto));
     }
 
@@ -25,9 +28,13 @@ public class MasterDomainController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDomain(@PathVariable Long id) {
-        masterDomainService.deleteDomain(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponseMessage> deleteDomain(@PathVariable Long id) {
+        masterDomainService.deleteDomain(id); ApiResponseMessage message= ApiResponseMessage.builder()
+                .message("Successfully Deleted")
+                .success(true)
+                .status(HttpStatus.OK)
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -22,9 +22,9 @@ public class ContactInterviews {
     @Column(name = "interview_status")
     private String interviewStatus;
 
-//    @ManyToOne
-//    @JoinColumn(name = "contact_id")
-//    private ContactDetails contactDetails;
+    @ManyToOne
+    @JoinColumn(name = "contact_id")
+    private ContactDetails contactDetails;
 
     @ManyToOne
     @JoinColumn(name = "client_id")

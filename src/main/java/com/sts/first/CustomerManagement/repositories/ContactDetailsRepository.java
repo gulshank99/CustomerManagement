@@ -19,12 +19,12 @@ public interface ContactDetailsRepository extends JpaRepository<ContactDetails,L
     List<ContactDetails> findByDesignationContainingIgnoreCase(String designation);
 
     // Search by Domain
-    List<ContactDetails> findByDomain_DomainDetailsContainingIgnoreCase(String domainDetails);
+//    List<ContactDetails> findByDomain_DomainDetailsContainingIgnoreCase(String domainDetails);
 
-    // Search by Technology
-    List<ContactDetails> findByTechnology_TechnologyContainingIgnoreCase(String technology);
+//    // Search by Technology
+//    List<ContactDetails> findByTechnology_TechnologyContainingIgnoreCase(String technology);
 
     // Search by Location
-    List<ContactDetails> findByPreferredLocation_LocationDetailsContainingIgnoreCase(String locationDetails);
+//    List<ContactDetails> findByPreferredLocation_LocationDetailsContainingIgnoreCase(String locationDetails);
 
 }

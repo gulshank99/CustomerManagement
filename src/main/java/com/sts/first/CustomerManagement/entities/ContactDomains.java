@@ -1,6 +1,7 @@
 package com.sts.first.CustomerManagement.entities;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 @Entity
 @Table(name = "contact_domains")
@@ -12,8 +13,8 @@ public class ContactDomains {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "contact_domain_id")
+    private Long contactDomainId;
 
     @Column(name = "is_primary_domain")
     private Boolean isPrimaryDomain;
@@ -21,11 +22,11 @@ public class ContactDomains {
     @Column(name = "is_secondary_domain")
     private Boolean isSecondaryDomain;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.EAGER)
     @JoinColumn(name = "contact_id")
     private ContactDetails contactDetails;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.EAGER)
     @JoinColumn(name = "domain_id")
     private MasterDomain domain;
 }

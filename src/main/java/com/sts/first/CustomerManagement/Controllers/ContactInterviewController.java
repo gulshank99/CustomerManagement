@@ -1,7 +1,10 @@
 package com.sts.first.CustomerManagement.Controllers;
+import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.ContactInterviewsDto;
 import com.sts.first.CustomerManagement.services.ContactInterviewService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,7 @@ public class ContactInterviewController {
     private ContactInterviewService contactInterviewsService;
 
     @PostMapping
-    public ResponseEntity<ContactInterviewsDto> createContactInterview(@RequestBody ContactInterviewsDto contactInterviewsDto) {
+    public ResponseEntity<ContactInterviewsDto> createContactInterview(@Valid @RequestBody ContactInterviewsDto contactInterviewsDto) {
         return ResponseEntity.ok(contactInterviewsService.createContactInterview(contactInterviewsDto));
     }
 
@@ -25,9 +28,13 @@ public class ContactInterviewController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteContactInterview(@PathVariable Long id) {
-        contactInterviewsService.deleteContactInterview(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponseMessage> deleteContactInterview(@PathVariable Long id) {
+        contactInterviewsService.deleteContactInterview(id); ApiResponseMessage message= ApiResponseMessage.builder()
+                .message("Successfully Deleted")
+                .success(true)
+                .status(HttpStatus.OK)
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -59,11 +59,11 @@ public class InterviewRoundServiceImpl implements InterviewRoundService {
             interviewRound.setInterview(contactInterviews);
         }
 
-        if (interviewRoundDto.getContactDetails() != null) {
-            ContactDetails contactDetails = contactDetailsRepository.findById(interviewRoundDto.getContactDetails().getContactId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + interviewRoundDto.getContactDetails().getContactId()));
-            interviewRound.setContactDetails(contactDetails);
-        }
+//        if (interviewRoundDto.getContactDetails() != null) {
+//            ContactDetails contactDetails = contactDetailsRepository.findById(interviewRoundDto.getContactDetails().getContactId())
+//                    .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + interviewRoundDto.getContactDetails().getContactId()));
+//            interviewRound.setContactDetails(contactDetails);
+//        }
 
         InterviewRound updatedInterviewRound = interviewRoundRepository.save(interviewRound);
         return modelMapper.map(updatedInterviewRound, InterviewRoundDto.class);

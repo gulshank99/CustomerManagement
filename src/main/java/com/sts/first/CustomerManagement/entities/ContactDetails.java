@@ -20,23 +20,25 @@ public class ContactDetails {
     @Column(name = "contact_id")
     private Long contactId;
 
-    @Column(name = "contact_name", nullable = false)
+    @Column(name = "contact_name")
     private String contactName;
 
     @Column(name = "dob")
     private LocalDate dob;
 
-    @Column(name = "primary_number", nullable = false)
+    @Column(name = "primary_number", unique = true)
     private Long primaryNumber;
 
     @Column(name = "designation")
     private String designation;
 
-    @Column(name = "secondary_number")
+    @Column(name = "secondary_number",unique = true)
     private Long secondaryNumber;
 
     @Column(name = "company_name")
     private String companyName;
+
+    private Long totalExperience;
 
     @Column(name = "resume")
     private String resume;
@@ -66,11 +68,13 @@ public class ContactDetails {
     @Column(name = "hiring_type")
     private String hiringType;
 
-    @Column(name = "tech_stack")
-    private String techStack;
+    @Column(name = "tech_Role")
+    private String techRole;
 
     @Column(name = "inserted_on")
     private LocalDate insertedOn;
+
+    private Long noticePeriod;
 
 
     @PrePersist
@@ -79,21 +83,21 @@ public class ContactDetails {
     }
 
     // Relationships
-    @ManyToOne
-    @JoinColumn(name = "domain_id")
-    private MasterDomain domain;
+//    @ManyToOne
+//    @JoinColumn(name = "domain_id")
+//    private MasterDomain domain;
 
-    @ManyToOne
-    @JoinColumn(name = "tech_id")
-    private MasterTechnology technology;
+//    @ManyToOne
+//    @JoinColumn(name = "tech_id")
+//    private MasterTechnology technology;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "location_id")
+//    private MasterLocation preferredLocation;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    private MasterLocation preferredLocation;
-
-    @ManyToOne
-    @JoinColumn(name = "interview_id")
-    private ContactInterviews interview;
+//    @ManyToOne
+//    @JoinColumn(name = "interview_id")
+//    private ContactInterviews interview;
 
     @ManyToOne
     @JoinColumn(name = "current_location_id")

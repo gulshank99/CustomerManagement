@@ -3,6 +3,7 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.ContactDetailsDto;
 import com.sts.first.CustomerManagement.services.ContactDetailsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ContactDetailsController {
     private ContactDetailsService contactDetailsService;
 
     @PostMapping("/create")
-    public ResponseEntity<ContactDetailsDto> createContact(@RequestBody ContactDetailsDto contactDetailsDto) {
+    public ResponseEntity<ContactDetailsDto> createContact(@Valid @RequestBody ContactDetailsDto contactDetailsDto) {
         ContactDetailsDto createdContact = contactDetailsService.createContact(contactDetailsDto);
         return new ResponseEntity<>(createdContact, HttpStatus.CREATED);
     }
