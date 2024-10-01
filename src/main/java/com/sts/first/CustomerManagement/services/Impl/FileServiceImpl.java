@@ -49,7 +49,7 @@ public class FileServiceImpl implements FileService {
                 }
                 targetDirectory = RESUME_DIR;
                 break;
-            case "job_description":
+            case "jd":
                 if (!isAllowedDocExtension(extension)) {
                     throw new BadApiRequestException("Invalid document format for job description: " + extension);
                 }
