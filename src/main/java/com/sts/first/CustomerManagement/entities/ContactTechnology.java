@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "contacts_technology")
+@Table(name = "contacts_technology", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"contact_id", "tech_id"})
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +14,7 @@ import lombok.*;
 public class ContactTechnology {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contact_tech_id")
     private Long contactTechId;
 

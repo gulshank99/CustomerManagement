@@ -2,10 +2,13 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.ContactPreferredLocationDto;
 import com.sts.first.CustomerManagement.services.ContactPreferredLocationService;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +21,12 @@ public class ContactPreferredLocationController {
     private ContactPreferredLocationService contactPreferredLocationService;
 
     @PostMapping
-    public ResponseEntity<ContactPreferredLocationDto> createContactPreferredLocation(@Valid @RequestBody ContactPreferredLocationDto contactPreferredLocationDto) {
+    public ResponseEntity<ContactPreferredLocationDto> createContactPreferredLocation( @Validated(CreateValidation.class) @RequestBody ContactPreferredLocationDto contactPreferredLocationDto) {
         return ResponseEntity.ok(contactPreferredLocationService.createPreferredLocation(contactPreferredLocationDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContactPreferredLocationDto> updateContactPreferredLocation(@PathVariable Long id, @RequestBody ContactPreferredLocationDto contactPreferredLocationDto) {
+    public ResponseEntity<ContactPreferredLocationDto> updateContactPreferredLocation( @PathVariable Long id,  @Validated(UpdateValidation.class) @RequestBody ContactPreferredLocationDto contactPreferredLocationDto) {
         return ResponseEntity.ok(contactPreferredLocationService.updatePreferredLocation(id, contactPreferredLocationDto));
     }
 

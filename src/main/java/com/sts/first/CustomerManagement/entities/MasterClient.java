@@ -1,11 +1,18 @@
 package com.sts.first.CustomerManagement.entities;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "clientId")
 @Table(name = "master_client")
 @Data
 @NoArgsConstructor
@@ -14,38 +21,31 @@ import java.time.LocalDateTime;
 public class MasterClient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//  @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Long clientId;
 
-    @Column(name = "client_name", nullable = false)
+    @Column(name = "client_name", nullable = false, unique = true)
     private String clientName;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "client_ho")
+    private String clientHo;
 
-    @Column(name = "hr_contact_person")
-    private String hrContactPerson;
-
-    @Column(name = "technical_person")
-    private String technicalPerson;
-
-    @Column(name = "primary_mobile")
-    private Long primaryMobile;
-
-    @Column(name = "secondary_number")
-    private Long secondaryNumber;
 
     @Column(name = "inserted_on")
     private LocalDate insertedOn;
 
+//    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private List<ClientLocation> clientLocations;
+
+//    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private List<ClientJob> clientJobs;
 
     @PrePersist
     protected void onCreate() {
         this.insertedOn = LocalDate.now();
     }
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    private MasterLocation location;
 }

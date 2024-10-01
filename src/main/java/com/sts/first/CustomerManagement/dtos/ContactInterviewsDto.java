@@ -1,8 +1,11 @@
 package com.sts.first.CustomerManagement.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,15 +24,13 @@ public class ContactInterviewsDto {
     @NotNull(message = "Interview date is required !!")
     private LocalDate interviewDate;
 
-    @NotBlank(message = "Interview status is required !!")
-    @NotNull(message = "Interview Status is required !!")
+    @NotBlank(message = "Interview status is required !!", groups = {CreateValidation.class})
+    @Size(min = 3,max = 30,message = "Invalid Name !!", groups = {CreateValidation.class, UpdateValidation.class})
     private String interviewStatus;
 
-    @NotNull(message = "Client ID details are required !!")
-    @NotBlank(message = "Client ID status is required !!")
+    @NotNull(message = "Client ID details are required !!", groups = {CreateValidation.class })
     private MasterClientDto client;
 
-    @NotNull(message = "Contact ID details are required !!")
-    @NotBlank(message = "Contact ID status is required !!")
+    @NotNull(message = "Contact ID details are required !!", groups = {CreateValidation.class })
     private ContactDetailsDto contactDetails;
 }

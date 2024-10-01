@@ -2,10 +2,13 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.ContactInterviewsDto;
 import com.sts.first.CustomerManagement.services.ContactInterviewService;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +21,12 @@ public class ContactInterviewController {
     private ContactInterviewService contactInterviewsService;
 
     @PostMapping
-    public ResponseEntity<ContactInterviewsDto> createContactInterview(@Valid @RequestBody ContactInterviewsDto contactInterviewsDto) {
+    public ResponseEntity<ContactInterviewsDto> createContactInterview(@Validated(CreateValidation.class) @RequestBody ContactInterviewsDto contactInterviewsDto) {
         return ResponseEntity.ok(contactInterviewsService.createContactInterview(contactInterviewsDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContactInterviewsDto> updateContactInterview(@PathVariable Long id, @RequestBody ContactInterviewsDto contactInterviewsDto) {
+    public ResponseEntity<ContactInterviewsDto> updateContactInterview(@PathVariable Long id, @Validated(UpdateValidation.class) @RequestBody ContactInterviewsDto contactInterviewsDto) {
         return ResponseEntity.ok(contactInterviewsService.updateContactInterview(id, contactInterviewsDto));
     }
 

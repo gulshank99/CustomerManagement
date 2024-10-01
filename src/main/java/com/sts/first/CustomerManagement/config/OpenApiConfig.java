@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
-    //This is for integrating Springdoc OpenAPI with a Spring Boot application
+    //This is for integrating Spring doc OpenAPI with a Spring Boot application
     // to auto-generate the API documentation and provide a Swagger UI.
     @Bean
     public GroupedOpenApi publicApi() {

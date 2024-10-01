@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "interview_round")
+@Table(name = "interview_round",uniqueConstraints = { @UniqueConstraint(columnNames = {"interview_id", "round_number"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class InterviewRound {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//  @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "round_id")
     private Long roundId;
 
@@ -34,6 +34,9 @@ public class InterviewRound {
 
     @Column(name = "softskills_rating")
     private Integer softskillsRating;
+
+    @Column(name = "interview_status")
+    private String interviewStatus;
 
     @Column(name = "remarks")
     private String remarks;

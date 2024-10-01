@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 public class MasterTechnology {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tech_id")
     private Long techId;
 
-    @Column(name = "technology", nullable = false)
+    @Column(name = "technology", nullable = false, unique = true)
     private String technology;
 
     @Column(name = "inserted_on")

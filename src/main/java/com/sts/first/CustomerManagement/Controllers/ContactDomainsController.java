@@ -4,10 +4,13 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.ContactDomainsDto;
 import com.sts.first.CustomerManagement.services.ContactDomainService;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +23,12 @@ public class ContactDomainsController {
     private ContactDomainService contactDomainsService;
 
     @PostMapping
-    public ResponseEntity<ContactDomainsDto> createContactDomain(@Valid @RequestBody ContactDomainsDto contactDomainsDto) {
+    public ResponseEntity<ContactDomainsDto> createContactDomain(@Validated(CreateValidation.class) @RequestBody ContactDomainsDto contactDomainsDto) {
         return ResponseEntity.ok(contactDomainsService.createContactDomain(contactDomainsDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContactDomainsDto> updateContactDomain(@PathVariable Long id, @RequestBody ContactDomainsDto contactDomainsDto) {
+    public ResponseEntity<ContactDomainsDto> updateContactDomain(  @PathVariable Long id,@Validated(UpdateValidation.class) ContactDomainsDto contactDomainsDto) {
         return ResponseEntity.ok(contactDomainsService.updateContactDomain(id, contactDomainsDto));
     }
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +25,15 @@ public class MasterDomainServiceImpl implements MasterDomainService {
 
     @Override
     public MasterDomainDto createDomain(MasterDomainDto domainDto) {
+
+        Long maxId = masterDomainRepository.findMaxId();
+        Long newId = maxId + 1;
+        domainDto.setDomainId(newId);
+
+        Optional<MasterDomain> existingDomain = masterDomainRepository.findByDomainDetails(domainDto.getDomainDetails());
+        if (existingDomain.isPresent()) {
+            throw new IllegalArgumentException("Domain details already exist.");
+        }
         MasterDomain domain = modelMapper.map(domainDto, MasterDomain.class);
         MasterDomain savedDomain = masterDomainRepository.save(domain);
         return modelMapper.map(savedDomain, MasterDomainDto.class);
@@ -34,7 +44,14 @@ public class MasterDomainServiceImpl implements MasterDomainService {
         MasterDomain domain = masterDomainRepository.findById(domainId)
                 .orElseThrow(() -> new ResourceNotFoundException("Domain not found with id: " + domainId));
 
-        domain.setDomainDetails(domainDto.getDomainDetails());
+        Optional<MasterDomain> existingDomain = masterDomainRepository.findByDomainDetails(domainDto.getDomainDetails());
+        if (existingDomain.isPresent()) {
+            throw new IllegalArgumentException("Domain details already exist.");
+        }
+
+        if (domainDto.getDomainDetails() != null) {
+            domain.setDomainDetails(domainDto.getDomainDetails());
+        }
         MasterDomain updatedDomain = masterDomainRepository.save(domain);
         return modelMapper.map(updatedDomain, MasterDomainDto.class);
     }

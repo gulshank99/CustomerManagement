@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 public class MasterLocation{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id")
     private Long locationId;
 
-    @Column(name = "location_details", nullable = false)
+    @Column(name = "location_details", unique = true)
     private String locationDetails;
 
     @Column(name = "inserted_on")

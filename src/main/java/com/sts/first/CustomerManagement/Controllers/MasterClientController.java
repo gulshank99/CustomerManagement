@@ -2,10 +2,13 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.MasterClientDto;
 import com.sts.first.CustomerManagement.services.MasterClientService;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +21,12 @@ public class MasterClientController {
     private MasterClientService masterClientService;
 
     @PostMapping
-    public ResponseEntity<MasterClientDto> createClient(@Valid @RequestBody MasterClientDto masterClientDto) {
+    public ResponseEntity<MasterClientDto> createClient(@Validated(CreateValidation.class) @RequestBody MasterClientDto masterClientDto) {
         return ResponseEntity.ok(masterClientService.createClient(masterClientDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MasterClientDto> updateClient(@PathVariable Long id, @RequestBody MasterClientDto masterClientDto) {
+    public ResponseEntity<MasterClientDto> updateClient(@PathVariable Long id, @Validated(UpdateValidation.class) @RequestBody MasterClientDto masterClientDto) {
         return ResponseEntity.ok(masterClientService.updateClient(id, masterClientDto));
     }
 

@@ -1,5 +1,6 @@
 package com.sts.first.CustomerManagement.services.Impl;
 
+import com.sts.first.CustomerManagement.dtos.ContactInterviewsDto;
 import com.sts.first.CustomerManagement.dtos.InterviewRoundDto;
 import com.sts.first.CustomerManagement.entities.ContactDetails;
 import com.sts.first.CustomerManagement.entities.ContactInterviews;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,8 +34,27 @@ public class InterviewRoundServiceImpl implements InterviewRoundService {
 
     @Override
     public InterviewRoundDto createInterviewRound(InterviewRoundDto interviewRoundDto) {
+
+        validateInterviewId(interviewRoundDto);
+
+        Long maxId = interviewRoundRepository.findMaxId();
+        Long newId = maxId + 1;
+        interviewRoundDto.setRoundId(newId);
+
+        Long interviewId = interviewRoundDto.getInterview().getInterviewId();
+        Integer roundNumber = interviewRoundDto.getRoundNumber();
+
+        // Check if a combination of interviewId and roundNumber already exists
+        Optional<InterviewRound> existingInterviewRound =
+                interviewRoundRepository.findByInterviewInterviewIdAndRoundNumber(interviewId, roundNumber);
+
+        if (existingInterviewRound.isPresent()) {
+            throw new IllegalArgumentException("The combination of interview ID and round number already exists.");
+        }
+
         InterviewRound interviewRound = modelMapper.map(interviewRoundDto, InterviewRound.class);
         InterviewRound savedInterviewRound = interviewRoundRepository.save(interviewRound);
+
         return modelMapper.map(savedInterviewRound, InterviewRoundDto.class);
     }
 
@@ -43,14 +64,44 @@ public class InterviewRoundServiceImpl implements InterviewRoundService {
                 .orElseThrow(() -> new ResourceNotFoundException("Interview round not found with id: " + id));
 
         // Update the fields in the entity with values from the DTO
-        interviewRound.setRoundNumber(interviewRoundDto.getRoundNumber());
-        interviewRound.setRoundDate(interviewRoundDto.getRoundDate());
-        interviewRound.setInterviewerName(interviewRoundDto.getInterviewerName());
-        interviewRound.setTechnologyInterviewed(interviewRoundDto.getTechnologyInterviewed());
-        interviewRound.setTechRating(interviewRoundDto.getTechRating());
-        interviewRound.setSoftskillsRating(interviewRoundDto.getSoftskillsRating());
-        interviewRound.setRemarks(interviewRoundDto.getRemarks());
+        Long interviewId = interviewRoundDto.getInterview().getInterviewId();
+        Integer roundNumber = interviewRoundDto.getRoundNumber();
 
+        // Check if a combination of interviewId and roundNumber already exists
+        Optional<InterviewRound> existingInterviewRound =
+                interviewRoundRepository.findByInterviewInterviewIdAndRoundNumber(interviewId, roundNumber);
+
+        if (existingInterviewRound.isPresent()) {
+            throw new IllegalArgumentException("The combination of interview ID and round number already exists.");
+        }
+
+        if (interviewRoundDto.getRoundNumber() != null) {
+            interviewRound.setRoundNumber(interviewRoundDto.getRoundNumber());
+        }
+        if (interviewRoundDto.getRoundDate() != null) {
+            interviewRound.setRoundDate(interviewRoundDto.getRoundDate());
+        }
+        if (interviewRoundDto.getInterviewerName() != null) {
+            interviewRound.setInterviewerName(interviewRoundDto.getInterviewerName());
+        }
+        if (interviewRoundDto.getTechnologyInterviewed() != null) {
+            interviewRound.setTechnologyInterviewed(interviewRoundDto.getTechnologyInterviewed());
+        }
+        if (interviewRoundDto.getTechRating() != null) {
+            interviewRound.setTechRating(interviewRoundDto.getTechRating());
+        }
+        if (interviewRoundDto.getSoftskillsRating() != null) {
+            interviewRound.setSoftskillsRating(interviewRoundDto.getSoftskillsRating());
+        }
+        if (interviewRoundDto.getInterviewStatus() != null) {
+            interviewRound.setInterviewStatus(interviewRoundDto.getInterviewStatus());
+        }
+
+        if (interviewRoundDto.getRemarks() != null) {
+            interviewRound.setRemarks(interviewRoundDto.getRemarks());
+        }
+
+//        validateInterviewId(interviewRoundDto);
 
         // Fetch and set related entities
         if (interviewRoundDto.getInterview() != null && interviewRoundDto.getInterview().getInterviewId() != null) {
@@ -89,4 +140,29 @@ public class InterviewRoundServiceImpl implements InterviewRoundService {
                 .map(interviewRound -> modelMapper.map(interviewRound, InterviewRoundDto.class))
                 .collect(Collectors.toList());
     }
+
+
+    /**
+     * Validates that the interview id is present in the interview details.
+     * If the interview id is present, it checks if the interview exists in the database.
+     * If the interview does not exist, it throws a ResourceNotFoundException.
+     */
+    private void validateInterviewId(InterviewRoundDto interviewRoundDto) {
+        ContactInterviewsDto contactInterviewsDto = interviewRoundDto.getInterview();
+
+        if (contactInterviewsDto == null || contactInterviewsDto.getInterviewId() == null) {
+            throw new IllegalArgumentException("Interview ID must be present in the interview details!");
+        }
+
+        if (interviewRoundDto.getInterview().getInterviewId() != null) {
+              contactInterviewRepository.findById(interviewRoundDto.getInterview().getInterviewId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Interview not found with id: " + interviewRoundDto.getInterview().getInterviewId()));
+
+        }
+    }
+
+
+
+
+
 }

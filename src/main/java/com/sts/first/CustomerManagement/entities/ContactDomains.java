@@ -4,7 +4,9 @@ import lombok.*;
 import org.hibernate.annotations.Fetch;
 
 @Entity
-@Table(name = "contact_domains")
+@Table(name = "contact_domains", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"contact_id", "domain_id"})
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +14,7 @@ import org.hibernate.annotations.Fetch;
 public class ContactDomains {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contact_domain_id")
     private Long contactDomainId;
 

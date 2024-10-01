@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,17 @@ public class MasterTechnologyServiceImpl implements MasterTechnologyService {
 
     @Override
     public MasterTechnologyDto createTechnology(MasterTechnologyDto technologyDto) {
+
+        Long maxId = masterTechnologyRepository.findMaxId();
+        Long newId = maxId + 1;
+        technologyDto.setTechId(newId);
+
+        Optional<MasterTechnology> existingTechnology = masterTechnologyRepository.findByTechnology(technologyDto.getTechnology());
+        if (existingTechnology.isPresent()) {
+            throw new IllegalArgumentException("Technology already exists.");
+        }
+
+
         MasterTechnology masterTechnology = modelMapper.map(technologyDto, MasterTechnology.class);
         MasterTechnology savedTechnology = masterTechnologyRepository.save(masterTechnology);
         return modelMapper.map(savedTechnology, MasterTechnologyDto.class);
@@ -33,7 +45,14 @@ public class MasterTechnologyServiceImpl implements MasterTechnologyService {
         MasterTechnology masterTechnology = masterTechnologyRepository.findById(techId)
                 .orElseThrow(() -> new ResourceNotFoundException("Technology not found with id: " + techId));
 
-        masterTechnology.setTechnology(technologyDto.getTechnology());
+        Optional<MasterTechnology> existingTechnology = masterTechnologyRepository.findByTechnology(technologyDto.getTechnology());
+        if (existingTechnology.isPresent()) {
+            throw new IllegalArgumentException("Technology already exists.");
+        }
+
+        if (technologyDto.getTechnology() != null) {
+            masterTechnology.setTechnology(technologyDto.getTechnology());
+        }
         MasterTechnology updatedTechnology = masterTechnologyRepository.save(masterTechnology);
         return modelMapper.map(updatedTechnology, MasterTechnologyDto.class);
     }

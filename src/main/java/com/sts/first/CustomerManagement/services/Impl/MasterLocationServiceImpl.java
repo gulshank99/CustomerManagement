@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,16 @@ public class MasterLocationServiceImpl implements MasterLocationService {
 
     @Override
     public MasterLocationDto createLocation(MasterLocationDto locationDto) {
+        Long maxId = masterLocationRepository.findMaxId();
+        Long newId = maxId + 1;
+        locationDto.setLocationId(newId);
+
+        Optional<MasterLocation> existingLocation = masterLocationRepository.findByLocationDetails(locationDto.getLocationDetails());
+        if (existingLocation.isPresent()) {
+            throw new IllegalArgumentException("Location details already exist.");
+        }
+
+
         MasterLocation masterLocation = modelMapper.map(locationDto, MasterLocation.class);
         MasterLocation savedLocation = masterLocationRepository.save(masterLocation);
         return modelMapper.map(savedLocation, MasterLocationDto.class);
@@ -33,8 +44,14 @@ public class MasterLocationServiceImpl implements MasterLocationService {
         MasterLocation masterLocation = masterLocationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Location not found with id: " + id));
 
-        masterLocation.setLocationDetails(locationDto.getLocationDetails());
-        masterLocation.setInsertedOn(locationDto.getInsertedOn());
+        Optional<MasterLocation> existingLocation = masterLocationRepository.findByLocationDetails(locationDto.getLocationDetails());
+        if (existingLocation.isPresent()) {
+            throw new IllegalArgumentException("Location details already exist.");
+        }
+
+        if (locationDto.getLocationDetails() != null) {
+            masterLocation.setLocationDetails(locationDto.getLocationDetails());
+        }
 
         MasterLocation updatedLocation = masterLocationRepository.save(masterLocation);
         return modelMapper.map(updatedLocation, MasterLocationDto.class);

@@ -20,8 +20,9 @@ public class SearchCriteriaDto {
     private Integer noticePeriod;
 
     private List<String> preferredLocation;
-    private String domain;
+    private List<String> domain;
     private List<String> technologies;
+    private List<String> companies;
 }
 
 

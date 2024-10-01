@@ -2,10 +2,13 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.InterviewRoundDto;
 import com.sts.first.CustomerManagement.services.Impl.InterviewRoundServiceImpl;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,12 +20,12 @@ public class InterviewRoundController {
     private InterviewRoundServiceImpl interviewRoundService;
 
     @PostMapping
-    public ResponseEntity<InterviewRoundDto> createInterviewRound(@Valid @RequestBody InterviewRoundDto interviewRoundDto) {
+    public ResponseEntity<InterviewRoundDto> createInterviewRound( @Validated(CreateValidation.class) @RequestBody InterviewRoundDto interviewRoundDto) {
         return ResponseEntity.ok(interviewRoundService.createInterviewRound(interviewRoundDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InterviewRoundDto> updateInterviewRound(@PathVariable Long id, @RequestBody InterviewRoundDto interviewRoundDto) {
+    public ResponseEntity<InterviewRoundDto> updateInterviewRound(@PathVariable Long id,  @Validated(UpdateValidation.class) @RequestBody InterviewRoundDto interviewRoundDto) {
         return ResponseEntity.ok(interviewRoundService.updateInterviewRound(id, interviewRoundDto));
     }
 

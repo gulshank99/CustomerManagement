@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -18,6 +19,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -61,10 +64,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponseMessage> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex) {
         // Log the exception
         logger.error("Database constraint violation: ", ex);
+        String errorMessage = ex.getMessage();
+        // Determine the appropriate response message
+        String userFriendlyMessage;
+        if (errorMessage != null) {
+            userFriendlyMessage =  errorMessage  + "'. Please enter a unique value.";
+        } else {
+            userFriendlyMessage = "A database constraint was violated. Please ensure unique fields are not duplicated.";
+        }
 
-        // Build an error response
+        // Build the error response using ApiResponseMessage
         ApiResponseMessage responseMessage = ApiResponseMessage.builder()
-                .message("A database constraint was violated. Please ensure unique fields are not duplicated.")
+                .message(userFriendlyMessage)
                 .status(HttpStatus.BAD_REQUEST)
                 .success(false)
                 .build();
@@ -80,58 +91,49 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        String requiredType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown";
+    public ResponseEntity<ApiResponseMessage> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String message = "Invalid input: " + ex.getValue() + ". Expected a numeric value.";
+        ApiResponseMessage response = ApiResponseMessage.builder()
+                .message(message)
+                .success(false)
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
 
-        // Custom error message based on the type
-        String errorMessage;
-        switch (requiredType) {
-            case "Boolean":
-                errorMessage = String.format(
-                        "Invalid boolean value '%s' for parameter '%s'. Expected 'true' or 'false'.",
-                        ex.getValue(),
-                        ex.getName()
-                );
-                break;
-            case "Long":
-                errorMessage = String.format(
-                        "Invalid long value '%s' for parameter '%s'. Please provide a valid integer value.",
-                        ex.getValue(),
-                        ex.getName()
-                );
-                break;
-            case "Double":
-                errorMessage = String.format(
-                        "Invalid double value '%s' for parameter '%s'. Please provide a valid decimal number.",
-                        ex.getValue(),
-                        ex.getName()
-                );
-                break;
-            case "Integer":
-                errorMessage = String.format(
-                        "Invalid integer value '%s' for parameter '%s'. Please provide a valid integer.",
-                        ex.getValue(),
-                        ex.getName()
-                );
-                break;
-            case "String":
-                errorMessage = String.format(
-                        "Invalid string value for parameter '%s'. Please provide a valid text value.",
-                        ex.getName()
-                );
-                break;
-            default:
-                errorMessage = String.format(
-                        "Invalid value '%s' for parameter '%s'. Expected a value of type '%s'.",
-                        ex.getValue(),
-                        ex.getName(),
-                        requiredType
-                );
-                break;
-        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
-        return ResponseEntity.badRequest().body(errorMessage);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponseMessage> handleIllegalArgumentException(IllegalArgumentException ex) {
+        String message = ex.getMessage(); // Get the specific exception message
+        ApiResponseMessage response = ApiResponseMessage.builder()
+                .message(message) // Use the specific exception message
+                .success(false)
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ApiResponseMessage> handleDuplicateResourceException(DuplicateResourceException ex) {
+        ApiResponseMessage responseMessage = ApiResponseMessage.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.CONFLICT)
+                .success(false)
+                .build();
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(FileNotFoundCustomException.class)
+    public ResponseEntity<Object> handleFileNotFoundException(FileNotFoundCustomException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "File Not Found");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
 }

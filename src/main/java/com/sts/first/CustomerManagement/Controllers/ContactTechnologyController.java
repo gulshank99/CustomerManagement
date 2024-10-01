@@ -3,10 +3,13 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.ContactTechnologyDto;
 import com.sts.first.CustomerManagement.services.ContactTechnologyService;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +22,12 @@ public class ContactTechnologyController {
     private ContactTechnologyService contactsTechnologyService;
 
     @PostMapping
-    public ResponseEntity<ContactTechnologyDto> createContactTechnology(@Valid @RequestBody ContactTechnologyDto contactTechnologyDto) {
+    public ResponseEntity<ContactTechnologyDto> createContactTechnology( @Validated(CreateValidation.class) @RequestBody ContactTechnologyDto contactTechnologyDto) {
         return ResponseEntity.ok(contactsTechnologyService.createContactTechnology(contactTechnologyDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContactTechnologyDto> updateContactTechnology(@PathVariable Long id, @RequestBody ContactTechnologyDto contactsTechnologyDto) {
+    public ResponseEntity<ContactTechnologyDto> updateContactTechnology(@PathVariable Long id, @Validated(UpdateValidation.class) @RequestBody ContactTechnologyDto contactsTechnologyDto) {
         return ResponseEntity.ok(contactsTechnologyService.updateContactTechnology(id, contactsTechnologyDto));
     }
 

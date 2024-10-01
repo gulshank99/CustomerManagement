@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 public class MasterDomain {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "domain_id")
     private Long domainId;
 
-    @Column(name = "domain_details", nullable = false)
+    @Column(name = "domain_details", nullable = false, unique = true)
     private String domainDetails;
 
     @Column(name = "inserted_on")

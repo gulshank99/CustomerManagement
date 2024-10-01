@@ -1,42 +1,41 @@
 package com.sts.first.CustomerManagement.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
+import com.sts.first.CustomerManagement.validate.UpdateValidation;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class MasterClientDto {
+
     private Long clientId;
-    @NotBlank(message = "Client name is required !!")
+
+    @NotBlank(message = "Client name is required !!", groups = {CreateValidation.class })
+    @Size(min = 3,max = 30,message = "Invalid Client Name !!", groups = {CreateValidation.class, UpdateValidation.class})
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Client Name must contain only alphabets.", groups = {CreateValidation.class, UpdateValidation.class})
     private String clientName;
 
-    @NotBlank(message = "Address is required !!")
-    private String address;
+    @NotBlank(message = "Client Head Office is required !!", groups = {CreateValidation.class })
+    @Size(min = 3,max = 30,message = "Invalid Client Head Office !!", groups = {CreateValidation.class, UpdateValidation.class})
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Client Head Office must contain only alphabets.", groups = {CreateValidation.class, UpdateValidation.class})
+    private String clientHo;
 
-    @NotBlank(message = "HR contact person is required !!")
-    private String hrContactPerson;
-
-    @NotBlank(message = "Technical person is required !!")
-    private String technicalPerson;
-
-    @Min(value = 1000000000L, message = "Phone number must be exactly 10 digits.")
-    @Digits(integer = 10, fraction = 0, message = "Phone number must be exactly 10 digits. !!")
-    @NotNull(message = "Primary Phone number is required !!")
-    private Long primaryMobile;
-
-    @Min(value = 1000000000L, message = "Phone number must be exactly 10 digits.")
-    @Digits(integer = 10, fraction = 0, message = "Phone number must be exactly 10 digits. !!")
-    private Long secondaryNumber;
+//    @NotNull(message = "Location details are required !!", groups = {CreateValidation.class })
+//    private List<ClientLocationDto> clientLocations;
+//
+//    @NotNull(message = "Job details are required !!", groups = {CreateValidation.class })
+//    private List<ClientJobDto> clientJobs;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate insertedOn;
 
-    @NotNull(message = "Location details are required !!")
-    @NotBlank(message = "Location details is required !!")
-    private MasterLocationDto location;
+
 }

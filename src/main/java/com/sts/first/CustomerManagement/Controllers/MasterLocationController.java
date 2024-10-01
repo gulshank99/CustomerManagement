@@ -3,10 +3,12 @@ package com.sts.first.CustomerManagement.Controllers;
 import com.sts.first.CustomerManagement.dtos.ApiResponseMessage;
 import com.sts.first.CustomerManagement.dtos.MasterLocationDto;
 import com.sts.first.CustomerManagement.services.MasterLocationService;
+import com.sts.first.CustomerManagement.validate.CreateValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +21,12 @@ public class MasterLocationController {
     private MasterLocationService masterLocationService;
 
     @PostMapping
-    public ResponseEntity<MasterLocationDto> createLocation(@Valid @RequestBody MasterLocationDto masterLocationDto) {
+    public ResponseEntity<MasterLocationDto> createLocation(@Validated(CreateValidation.class) @RequestBody MasterLocationDto masterLocationDto) {
         return ResponseEntity.ok(masterLocationService.createLocation(masterLocationDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MasterLocationDto> updateLocation(@PathVariable Long id, @RequestBody MasterLocationDto masterLocationDto) {
+    public ResponseEntity<MasterLocationDto> updateLocation(@PathVariable Long id, @Validated(CreateValidation.class) @RequestBody MasterLocationDto masterLocationDto) {
         return ResponseEntity.ok(masterLocationService.updateLocation(id, masterLocationDto));
     }
 

@@ -4,7 +4,7 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "contact_interviews")
+@Table(name = "contact_interviews", uniqueConstraints = @UniqueConstraint(columnNames = {"contact_id", "client_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class ContactInterviews {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "interview_id")
     private Long interviewId;
 
