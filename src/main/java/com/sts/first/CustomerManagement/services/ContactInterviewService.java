@@ -12,6 +12,14 @@ public interface ContactInterviewService {
 
     void deleteContactInterview(Long id);
 
+    List<ContactInterviewsDto> getAllContactsByJobId(Long jobId);
+
+    List<ContactInterviewsDto> getAllInterviewsByContactId(Long contactId);
+
+    List<ContactInterviewsDto> getAllInterviewsByContactIdAndClientId(Long contactId, Long clientId);
+
+
+
     ContactInterviewsDto getContactInterviewById(Long id);
 
     List<ContactInterviewsDto> getAllContactInterviews();

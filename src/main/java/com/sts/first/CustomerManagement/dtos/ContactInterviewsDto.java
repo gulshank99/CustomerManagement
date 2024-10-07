@@ -1,6 +1,7 @@
 package com.sts.first.CustomerManagement.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sts.first.CustomerManagement.entities.ClientJob;
 import com.sts.first.CustomerManagement.validate.CreateValidation;
 import com.sts.first.CustomerManagement.validate.UpdateValidation;
 import jakarta.validation.constraints.NotBlank;
@@ -28,8 +29,11 @@ public class ContactInterviewsDto {
     @Size(min = 3,max = 30,message = "Invalid Name !!", groups = {CreateValidation.class, UpdateValidation.class})
     private String interviewStatus;
 
-    @NotNull(message = "Client ID details are required !!", groups = {CreateValidation.class })
-    private MasterClientDto client;
+//    @NotNull(message = "Client ID details are required !!", groups = {CreateValidation.class })
+//    private MasterClientDto client;
+
+    @NotNull(message = "Job ID details are required !!", groups = {CreateValidation.class })
+    private ClientJob clientJob;
 
     @NotNull(message = "Contact ID details are required !!", groups = {CreateValidation.class })
     private ContactDetailsDto contactDetails;

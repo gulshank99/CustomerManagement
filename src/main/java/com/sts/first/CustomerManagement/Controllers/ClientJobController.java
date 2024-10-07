@@ -67,6 +67,15 @@ public class ClientJobController {
         return ResponseEntity.ok(jobs);
     }
 
+    @GetMapping("/client/{clientId}/jobs")
+    public ResponseEntity<List<ClientJobDto>> getJobsByClientId(@PathVariable Long clientId) {
+        List<ClientJobDto> jobs = clientJobService.getJobsByClientId(clientId);
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
+    }
+
+
+
+
     @PostMapping("/jd/{jobId}")
     public ResponseEntity<String> uploadJd(
             @PathVariable Long jobId, @RequestParam("file") MultipartFile file)

@@ -48,4 +48,18 @@ public class InterviewRoundController {
     public ResponseEntity<List<InterviewRoundDto>> getAllInterviewRounds() {
         return ResponseEntity.ok(interviewRoundService.getAllInterviewRounds());
     }
+
+    @GetMapping("/contact/{contactId}")
+    public ResponseEntity<List<InterviewRoundDto>> getInterviewRoundsByContactId(@PathVariable Long contactId) {
+        List<InterviewRoundDto> interviewRounds = interviewRoundService.getAllInterviewRoundsByContactId(contactId);
+        return ResponseEntity.ok(interviewRounds);
+    }
+
+    @GetMapping("/contact/{contactId}/job/{jobId}")
+    public ResponseEntity<List<InterviewRoundDto>> getInterviewRoundsByContactIdAndJobId(
+            @PathVariable Long contactId, @PathVariable Long jobId) {
+        List<InterviewRoundDto> interviewRounds = interviewRoundService.getAllInterviewRoundsByContactIdAndJobId(contactId, jobId);
+        return ResponseEntity.ok(interviewRounds);
+    }
+
 }

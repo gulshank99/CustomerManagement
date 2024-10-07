@@ -4,7 +4,7 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "contact_interviews", uniqueConstraints = @UniqueConstraint(columnNames = {"contact_id", "client_id"}))
+@Table(name = "contact_interviews", uniqueConstraints = @UniqueConstraint(columnNames = {"contact_id", "client_job_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,8 +26,13 @@ public class ContactInterviews {
     @JoinColumn(name = "contact_id")
     private ContactDetails contactDetails;
 
+//    @ManyToOne
+//    @JoinColumn(name = "client_id")
+//    private MasterClient client;
+
     @ManyToOne
-    @JoinColumn(name = "client_id")
-    private MasterClient client;
+    @JoinColumn(name = "client_job_id")
+    private ClientJob clientJob;
+
 
 }

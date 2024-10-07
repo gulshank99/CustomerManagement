@@ -10,4 +10,6 @@ public interface InterviewRoundService {
     void deleteInterviewRound(Long id);
     InterviewRoundDto getInterviewRoundById(Long id);
     List<InterviewRoundDto> getAllInterviewRounds();
+    List<InterviewRoundDto> getAllInterviewRoundsByContactId(Long contactId);
+    List<InterviewRoundDto> getAllInterviewRoundsByContactIdAndJobId(Long contactId, Long jobId);
 }

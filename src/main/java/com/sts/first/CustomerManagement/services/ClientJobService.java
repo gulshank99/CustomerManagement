@@ -10,6 +10,7 @@ public interface ClientJobService {
     void deleteJob(Long jobId);
     ClientJobDto getJobById(Long jobId);
     List<ClientJobDto> getAllJobs();
+    List<ClientJobDto> getJobsByClientId(Long clientId);
 
     void updateJdField(Long jobId, String jd);
 }

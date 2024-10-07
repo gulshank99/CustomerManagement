@@ -11,7 +11,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "client_job")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "jobId")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,7 +23,7 @@ public class ClientJob {
     @Column(name = "job_id")
     private Long jobId;
 
-    @Column(name = "JobCode")
+    @Column(name = "JobCode", unique = true)
     private String jobCode;
 
     @Column(name = "JD")
@@ -36,6 +35,18 @@ public class ClientJob {
     @Column(name = "created_on")
     private LocalDate createdOn;
 
+    @Column(name = "is_job_active")
+    private String isJobActive;
+
+    @Column(name = "post_created_on")
+    private LocalDate postCreatedOn;
+
+    @Column(name = "job_post_type")
+    private String jobPostType;
+
+    @Column(name = "inserted_by")
+    private String insertedBy;
+
 //    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
 //    @JsonIgnore
 //    private List<ClientJobTech> clientJobTechs;
@@ -44,6 +55,8 @@ public class ClientJob {
     @JoinColumn(name = "client_id", nullable = false)
     @JsonIgnore
     private MasterClient client;
+
+
 
     @PrePersist
     protected void onCreate() {

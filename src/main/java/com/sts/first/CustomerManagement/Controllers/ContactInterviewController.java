@@ -49,4 +49,23 @@ public class ContactInterviewController {
     public ResponseEntity<List<ContactInterviewsDto>> getAllContactInterviews() {
         return ResponseEntity.ok(contactInterviewsService.getAllContactInterviews());
     }
+
+    @GetMapping("/job/{jobId}/contacts")
+    public ResponseEntity<List<ContactInterviewsDto>> getContactsByJobId(@PathVariable Long jobId) {
+        List<ContactInterviewsDto> contacts = contactInterviewsService.getAllContactsByJobId(jobId);
+        return ResponseEntity.ok(contacts);
+    }
+
+    @GetMapping("/job/contact/{contactId}")
+    public ResponseEntity<List<ContactInterviewsDto>> getInterviewsByContactId(@PathVariable Long contactId) {
+        List<ContactInterviewsDto> interviews = contactInterviewsService.getAllInterviewsByContactId(contactId);
+        return ResponseEntity.ok(interviews);
+    }
+
+    @GetMapping("/contact/{contactId}/client/{clientId}")
+    public ResponseEntity<List<ContactInterviewsDto>> getInterviewsByContactIdAndClientId(
+            @PathVariable Long contactId, @PathVariable Long clientId) {
+        List<ContactInterviewsDto> interviews = contactInterviewsService.getAllInterviewsByContactIdAndClientId(contactId, clientId);
+        return ResponseEntity.ok(interviews);
+    }
 }

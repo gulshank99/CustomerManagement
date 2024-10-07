@@ -141,6 +141,67 @@ public class InterviewRoundServiceImpl implements InterviewRoundService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<InterviewRoundDto> getAllInterviewRoundsByContactId(Long contactId) {
+        // Validate if contact exists
+        ContactDetails contactDetails = contactDetailsRepository.findById(contactId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + contactId));
+
+        // Fetch all interviews for the given contactId
+        List<ContactInterviews> contactInterviews = contactInterviewRepository.findByContactDetailsContactId(contactId);
+
+        if (contactInterviews.isEmpty()) {
+            throw new ResourceNotFoundException("No interviews found for contact id: " + contactId);
+        }
+
+        // Fetch interview rounds for all interviews related to the contactId
+        List<InterviewRound> interviewRounds = interviewRoundRepository.findByInterviewIn(contactInterviews);
+
+        // Convert interview rounds to DTOs
+        List<InterviewRoundDto> interviewRoundDtos = interviewRounds.stream()
+                .map(round -> modelMapper.map(round, InterviewRoundDto.class))
+                .collect(Collectors.toList());
+
+        if (interviewRoundDtos.isEmpty()) {
+            throw new ResourceNotFoundException("No interview rounds found for contact id: " + contactId);
+        }
+        return interviewRoundDtos;
+    }
+
+
+
+    @Override
+    public List<InterviewRoundDto> getAllInterviewRoundsByContactIdAndJobId(Long contactId, Long jobId) {
+        // Validate if contact exists
+        ContactDetails contactDetails = contactDetailsRepository.findById(contactId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contact not found with id: " + contactId));
+
+        // Fetch all interviews for the given contactId and jobId
+        List<ContactInterviews> contactInterviews = contactInterviewRepository
+                .findByContactDetailsContactIdAndClientJobJobId(contactId, jobId);
+
+        if (contactInterviews.isEmpty()) {
+            throw new ResourceNotFoundException("No interviews found for contact id: " + contactId + " and job id: " + jobId);
+        }
+
+        // Fetch interview rounds for all interviews related to the contactId and jobId
+        List<InterviewRound> interviewRounds = interviewRoundRepository.findByInterviewIn(contactInterviews);
+
+        // Convert interview rounds to DTOs
+        List<InterviewRoundDto> interviewRoundDtos = interviewRounds.stream()
+                .map(round -> modelMapper.map(round, InterviewRoundDto.class))
+                .collect(Collectors.toList());
+
+        if (interviewRoundDtos.isEmpty()) {
+            throw new ResourceNotFoundException("No interview rounds found for contact id: " + contactId + " and job id: " + jobId);
+        }
+
+        return interviewRoundDtos;
+    }
+
+
+
+
 
     /**
      * Validates that the interview id is present in the interview details.
